@@ -6,7 +6,7 @@
 /*   By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 14:55:52 by sdeeyien          #+#    #+#             */
-/*   Updated: 2023/01/24 14:32:15 by sdeeyien         ###   ########.fr       */
+/*   Updated: 2023/01/25 01:09:07 by sdeeyien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,11 @@ static void send_to_server(pid_t pid, unsigned chr)
 		{
 			kill(pid, SIGUSR2);
 			usleep(50);
-			ft_printf("bit(%d) = 1\n", i);
 		}
 		else
 		{
 			kill(pid, SIGUSR1);
 			usleep(50);
-			ft_printf("bit(%d) = 0\n", i);
 		}
 		chr >>= 1;
 		i++;
