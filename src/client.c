@@ -6,7 +6,7 @@
 /*   By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 14:55:52 by sdeeyien          #+#    #+#             */
-/*   Updated: 2023/01/24 16:45:09 by sdeeyien         ###   ########.fr       */
+/*   Updated: 2023/01/25 11:02:28 by sdeeyien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,22 +36,36 @@ static void	send_to_server(pid_t pid, unsigned char chr)
 static void	send_pid_to_server(pid_t server_pid, pid_t client_pid)
 {
 	char	*pid_str;
+	char	*dummy;
 	int		i;
 
+	dummy = NULL;
 	pid_str = ft_itoa((int) client_pid);
 	if (!pid_str)
 	{
-		ft_printf("Error\n: Out of memory");
-		exit (1);
+		ft_printf("Error\n: Out of memory\n");
+		exit(1);
 	}
-	pid_str[ft_strlen(pid_str)] = '#';
+	if (ft_strlen(pid_str) == PID_DIGIT - 2)
+		dummy = ft_strjoin("00", pid_str);
+	else if (ft_strlen(pid_str) == PID_DIGIT - 1)
+		dummy = ft_strjoin("0", pid_str);
+	else if (ft_strlen(pid_str) == PID_DIGIT)
+		dummy = ft_strjoin("", pid_str);
+	if (!dummy)
+	{
+		free(pid_str);
+		ft_printf("Error\n: Out of memory\n");
+		exit(1);
+	}
+	free(pid_str);
+	pid_str = dummy;
 	i = 0;
-	while (pid_str[i] != '#')
+	while (i < PID_DIGIT)
 	{
 		send_to_server(server_pid, pid_str[i]);
 		i++;
 	}
-	send_to_server(server_pid, pid_str[i]);
 	free(pid_str);
 }
 

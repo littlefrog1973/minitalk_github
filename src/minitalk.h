@@ -6,7 +6,7 @@
 /*   By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 14:48:42 by sdeeyien          #+#    #+#             */
-/*   Updated: 2023/01/24 14:56:50 by sdeeyien         ###   ########.fr       */
+/*   Updated: 2023/01/25 05:15:54 by sdeeyien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,10 @@
 
 # ifndef BYTE
 #  define BYTE 8
+# endif
+
+# ifndef PID_DIGIT
+#  define PID_DIGIT 5
 # endif
 
 # include <stdlib.h>
