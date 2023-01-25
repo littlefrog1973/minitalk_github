@@ -6,13 +6,12 @@
 #    By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/02 12:25:01 by sdeeyien          #+#    #+#              #
-#    Updated: 2023/01/23 13:04:26 by sdeeyien         ###   ########.fr        #
+#    Updated: 2023/01/25 12:01:47 by sdeeyien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
-#CFLAGS =
 UNAME_S := $(shell uname -s)
 LIBDIR = libft
 SRCDIR = src

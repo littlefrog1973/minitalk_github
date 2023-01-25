@@ -6,11 +6,17 @@
 /*   By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 14:55:52 by sdeeyien          #+#    #+#             */
-/*   Updated: 2023/01/25 11:02:28 by sdeeyien         ###   ########.fr       */
+/*   Updated: 2023/01/25 13:42:03 by sdeeyien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+
+static void	respond_to_sig1(pid_t signum)
+{
+	if (signum == SIGUSR1)
+		ft_printf("Server-> Got it");
+}
 
 static void	send_to_server(pid_t pid, unsigned char chr)
 {
@@ -95,6 +101,7 @@ int	main(int argc, char *argv[])
 		return (1);
 	}
 	pid_no = ft_atoi(argv[1]);
+	ft_printf("Client PID = %d\n", getpid());
 	if (!pid_no)
 	{
 		ft_printf("Wrong PID\n");
@@ -102,5 +109,10 @@ int	main(int argc, char *argv[])
 	}
 	if (str_to_bit(pid_no, argv[2]))
 		ft_printf("Invalid message\n");
+	while (1)
+	{
+		signal(SIGUSR1, respond_to_sig1);
+		pause();
+	}
 	return (0);
 }
