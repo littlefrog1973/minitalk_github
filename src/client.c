@@ -6,7 +6,7 @@
 /*   By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 14:55:52 by sdeeyien          #+#    #+#             */
-/*   Updated: 2023/01/30 16:00:20 by sdeeyien         ###   ########.fr       */
+/*   Updated: 2023/01/30 16:15:12 by sdeeyien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,9 @@ int	main(int argc, char *argv[])
 	ft_putchar_fd('\n', STDOUT_FILENO);
 	signal(SIGUSR1, action);
 	signal(SIGUSR2, action);
-	if (argc != 3)
+	if (argc != 3 || !ft_strlen(argv[2]))
 	{
-		ft_printf("Error\n: Fewer or Larger parameters");
+		ft_putstr_fd("Error\n: Fewer or Too Many parameters\n", STDOUT_FILENO);
 		return (1);
 	}
 	g_argv[0] = argv[1];

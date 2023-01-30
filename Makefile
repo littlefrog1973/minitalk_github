@@ -6,7 +6,7 @@
 #    By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/02 12:25:01 by sdeeyien          #+#    #+#              #
-#    Updated: 2023/01/23 13:04:26 by sdeeyien         ###   ########.fr        #
+#    Updated: 2023/01/30 16:17:01 by sdeeyien         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,8 +28,8 @@ all:
 
 bonus:
 	cd $(LIBDIR) && make
-	$(CC) -o server $(CFLAGS) $(LIBDIR)/$(LIBDIR).a $(SRCDIR)/server.c
-	$(CC) -o client $(CFLAGS) $(LIBDIR)/$(LIBDIR).a $(SRCDIR)/client.c
+	$(CC) $(CFLAGS) $(SRCDIR)/server.c $(LIBDIR)/$(LIBDIR).a -o server
+	$(CC) $(CFLAGS) $(SRCDIR)/client.c $(LIBDIR)/$(LIBDIR).a -o client
 
 clean :
 	rm -f client
