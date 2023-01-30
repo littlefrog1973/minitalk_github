@@ -6,28 +6,21 @@
 /*   By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 14:48:42 by sdeeyien          #+#    #+#             */
-/*   Updated: 2023/01/23 17:06:32 by sdeeyien         ###   ########.fr       */
+/*   Updated: 2023/01/30 17:14:05 by sdeeyien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINITALK_H
 # define MINITALK_H
 
-/*# ifdef __linux__
-#  else
-# endif
-*/
-
 # ifndef BYTE
 #  define BYTE 8
 # endif
 
-#include <stdlib.h>
-#include <signal.h>
-#include <stdio.h>
-#include <unistd.h>
-#include "../libft/libft.h"
-
-
+# include <stdlib.h>
+# include <signal.h>
+# include <stdio.h>
+# include <unistd.h>
+# include "../libft/libft.h"
 
 #endif

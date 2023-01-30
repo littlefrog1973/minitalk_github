@@ -6,7 +6,7 @@
 /*   By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 14:55:52 by sdeeyien          #+#    #+#             */
-/*   Updated: 2023/01/30 16:15:12 by sdeeyien         ###   ########.fr       */
+/*   Updated: 2023/01/30 17:11:23 by sdeeyien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 char	*g_argv[2];
 
 static void	send_to_server(pid_t pid, unsigned char chr)
-// Send bit by bit of chr per call, by masking with bit_mask to
-// avoid while loop.
+/* Send bit by bit of chr per call, by masking with bit_mask
+to avoid while loop. */
 {
 	static int				i = -1;
 	static unsigned char	bit_mask[] = {1, 2, 4, 8, 16, 32, 64, 128};
@@ -31,7 +31,8 @@ static void	send_to_server(pid_t pid, unsigned char chr)
 }
 
 static void	str_to_bin(void)
-// Chop str to byte and ask send_to_server to send that byte, bit by bit to client
+/* Chop str to byte and ask send_to_server to send that byte,
+bit by bit to client */
 {
 	static int		bit_count;
 	static int		char_count = -1;

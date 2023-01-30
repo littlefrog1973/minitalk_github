@@ -6,17 +6,18 @@
 /*   By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 14:05:34 by sdeeyien          #+#    #+#             */
-/*   Updated: 2023/01/30 15:47:05 by sdeeyien         ###   ########.fr       */
+/*   Updated: 2023/01/30 17:12:54 by sdeeyien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
 static void	bit_to_char(int signum, siginfo_t *info, void *context)
-//Put received bit to 8th pos and RHS one by one to form received unsigned char
-//Cannot use while loop in this interruptible function, only advance once per interrupt
+/*Put received bit to 8th pos and RHS one by one to form received unsigned char
+Cannot use while loop in this interruptible function, only advance once
+per interrupt*/
 {
-	static unsigned	char	bits_count = 0;
+	static unsigned char	bits_count = 0;
 	static unsigned char	chr = 0;
 
 	(void) context;
