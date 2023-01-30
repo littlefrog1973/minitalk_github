@@ -6,54 +6,40 @@
 /*   By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/23 14:05:34 by sdeeyien          #+#    #+#             */
-/*   Updated: 2023/01/27 08:27:32 by sdeeyien         ###   ########.fr       */
+/*   Updated: 2023/01/30 15:47:05 by sdeeyien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
 static void	bit_to_char(int signum, siginfo_t *info, void *context)
+//Put received bit to 8th pos and RHS one by one to form received unsigned char
+//Cannot use while loop in this interruptible function, only advance once per interrupt
 {
-	static int				bits_count;
+	static unsigned	char	bits_count = 0;
 	static unsigned char	chr = 0;
-	static unsigned char	bit_shift[] = {1, 1, 1, 1, 1, 1, 1};
 
 	(void) context;
-	(void) info;
 	bits_count++;
+	if (bits_count > BYTE)
+		bits_count = 1;
 	if (signum == SIGUSR2)
-		chr |= 128;
-	chr >>= bit_shift[bits_count - 1];
-	if (bits_count == 8)
-	{
-		write(1, &chr, 1);
-		bits_count = 0;
-		chr = 0;
-	}
-}
-/*
-void	bit_to_char(int signum)
-{
-	static int				bits_count = 0;
-	static unsigned char	chr = 0;
-
-	bits_count++;
-	if (signum == SIGUSR1 && bits_count != 8)
+		chr |= 0b10000000;
+	if (bits_count != BYTE)
 		chr >>= 1;
-	if (signum == SIGUSR2)
+	if (bits_count == 8 && chr)
 	{
-		chr |= 128;
-		if (bits_count != 8)
-			chr >>= 1;
-	}
-	if (bits_count == 8)
-	{
-		write(1, &chr, 1);
+		write(STDOUT_FILENO, &chr, 1);
 		bits_count = 0;
 		chr = 0;
 	}
+	else if (bits_count == 8 && !chr)
+	{
+		kill(info->si_pid, SIGUSR2);
+		return ;
+	}
+	kill(info->si_pid, SIGUSR1);
 }
-*/
 
 int	main(void)
 {
@@ -62,9 +48,9 @@ int	main(void)
 
 	ft_memset(&s_sigaction, 0, sizeof(s_sigaction));
 	pid = getpid();
-	ft_putstr_fd("Server PID = ", pid);
-	ft_putnbr_fd(pid, 1);
-	ft_putchar_fd('\n', 1);
+	ft_putstr_fd("Server PID = ", STDOUT_FILENO);
+	ft_putnbr_fd(pid, STDOUT_FILENO);
+	ft_putchar_fd('\n', STDOUT_FILENO);
 	s_sigaction.sa_sigaction = bit_to_char;
 	s_sigaction.sa_flags = SA_SIGINFO | SA_RESTART | SA_NODEFER;
 	sigaction(SIGUSR1, &s_sigaction, NULL);
@@ -75,17 +61,3 @@ int	main(void)
 	}
 	return (0);
 }
-
-/*
-int	main(void)
-{
-	ft_printf("Server PID = %d\n", getpid());
-	while (1)
-	{
-		signal(SIGUSR1, bit_to_char);
-		signal(SIGUSR2, bit_to_char);
-		pause();
-	}
-	return (0);
-}
-*/

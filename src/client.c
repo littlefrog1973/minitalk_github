@@ -6,54 +6,71 @@
 /*   By: sdeeyien <sukitd@gmail.com>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/20 14:55:52 by sdeeyien          #+#    #+#             */
-/*   Updated: 2023/01/27 08:29:08 by sdeeyien         ###   ########.fr       */
+/*   Updated: 2023/01/30 16:00:20 by sdeeyien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-volatile char	*g_argv[2];
+char	*g_argv[2];
 
 static void	send_to_server(pid_t pid, unsigned char chr)
+// Send bit by bit of chr per call, by masking with bit_mask to
+// avoid while loop.
 {
-	int	i;
+	static int				i = -1;
+	static unsigned char	bit_mask[] = {1, 2, 4, 8, 16, 32, 64, 128};
 
-	i = 0;
-	while (i < BYTE)
-	{
-		if (chr & 1)
-			kill(pid, SIGUSR2);
-		else
-			kill(pid, SIGUSR1);
-		if (i == 7)
-			usleep(30);
-		else
-			usleep(100);
-		chr >>= 1;
-		i++;
-	}
+	i++;
+	if (i == BYTE)
+		i = 0;
+	if (chr & bit_mask[i])
+		kill(pid, SIGUSR2);
+	else
+		kill(pid, SIGUSR1);
 }
 
-static int	str_to_bin(pid_t pid, char *str)
+static void	str_to_bin(void)
+// Chop str to byte and ask send_to_server to send that byte, bit by bit to client
 {
-	unsigned char	chr;
+	static int		bit_count;
+	static int		char_count = -1;
+	static int		str_num = 0;
+	static int		serv_pid = 0;
 
-	if (!str)
-		return (1);
-	while (*str)
+	bit_count++;
+	if (!str_num)
+		str_num = (int) ft_strlen(g_argv[1]);
+	if (!serv_pid)
+		serv_pid = ft_atoi(g_argv[0]);
+	if (char_count == -1)
+		char_count++;
+	if (((bit_count % 8) == 1) && (bit_count > 1))
+		char_count++;
+	if (char_count > str_num)
+		exit (0);
+	send_to_server(serv_pid, (unsigned char) g_argv[1][char_count]);
+	usleep(5);
+}
+
+static void	action(pid_t signum)
+{
+	if (signum == SIGUSR1)
+		str_to_bin();
+	else
 	{
-		chr = *str;
-		send_to_server(pid, chr);
-		str++;
+		ft_printf("Server received all messages.\n");
+		exit (0);
 	}
-	return (0);
 }
 
 int	main(int argc, char *argv[])
 {
-	pid_t	pid_no;
-
-	pid_no = 0;
+	ft_putstr_fd("Client PID = ", STDOUT_FILENO);
+	ft_putnbr_fd(getpid(), STDOUT_FILENO);
+	ft_putchar_fd('\n', STDOUT_FILENO);
+	signal(SIGUSR1, action);
+	signal(SIGUSR2, action);
 	if (argc != 3)
 	{
 		ft_printf("Error\n: Fewer or Larger parameters");
@@ -61,28 +78,10 @@ int	main(int argc, char *argv[])
 	}
 	g_argv[0] = argv[1];
 	g_argv[1] = argv[2];
-	pid_no = ft_atoi(argv[1]);
-	if (str_to_bin(pid_no, argv[2]))
-		ft_printf("Invalid message\n");
-	return (0);
-}
-
-/*
-int	main(int argc, char *argv[])
-{
-	pid_t	pid_no;
-	static unsigned char	bit_mask[] = {1, 1, 1, 1, 1, 1, 1};
-
-	pid_no = 0;
-	if (argc != 3)
+	str_to_bin();
+	while (1)
 	{
-		ft_printf("Error\n: Fewer or Larger parameters");
-		return (1);
+		pause();
 	}
-	pid_no = ft_atoi(argv[1]);
-	printf("strlen of bit_mask = %lu\n", ft_strlen((char *) bit_mask));
-	if (str_to_bin(pid_no, argv[2]))
-		ft_printf("Invalid message\n");
 	return (0);
 }
-*/
